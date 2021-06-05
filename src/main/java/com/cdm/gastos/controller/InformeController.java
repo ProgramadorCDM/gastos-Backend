@@ -1,7 +1,9 @@
 package com.cdm.gastos.controller;
 
 import com.cdm.gastos.models.Informe;
+import com.cdm.gastos.models.User;
 import com.cdm.gastos.services.InformeServiceAPI;
+import com.cdm.gastos.services.UserServiceAPI;
 import net.sf.jasperreports.engine.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -28,11 +30,13 @@ public class InformeController {
 
     @Autowired
     InformeServiceAPI serviceAPI;
+    @Autowired
+    UserServiceAPI userServiceAPI;
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<Informe> getAll() {
-        return serviceAPI.getAll();
+        return serviceAPI.findAllInformeGeneric();
     }
 
     @GetMapping("/find/{id}")
@@ -44,6 +48,8 @@ public class InformeController {
     @PostMapping("/save")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Informe> save(@RequestBody Informe informe) {
+        User user = userServiceAPI.get(informe.getUsers().getId());
+        informe.setUsers(user);
         Informe obj = serviceAPI.save(informe);
         return new ResponseEntity<>(obj, HttpStatus.OK);
     }

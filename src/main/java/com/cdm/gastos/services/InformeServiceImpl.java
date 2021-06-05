@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class InformeServiceImpl extends GenericServiceImpl <Informe, Long> implements InformeServiceAPI {
 
@@ -16,5 +18,10 @@ public class InformeServiceImpl extends GenericServiceImpl <Informe, Long> imple
     @Override
     public CrudRepository<Informe, Long> getDAO() {
         return repository;
+    }
+
+    @Override
+    public List<Informe> findAllInformeGeneric() {
+        return this.repository.findAllInformeGeneric();
     }
 }
